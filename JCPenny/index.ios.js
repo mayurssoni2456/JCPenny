@@ -5,6 +5,7 @@
  */
 
 import React, { Component } from 'react';
+import { Tabs, Tab, Icon } from 'react-native-elements'
 import {
   AppRegistry,
   StyleSheet,
@@ -12,21 +13,50 @@ import {
   View
 } from 'react-native';
 
+
 export default class JCPenny extends Component {
+
+    constructor(props) {
+    super(props);
+    this.state = {
+      selectedTab: 'profile',
+    };
+
+    const { selectedTab } = this.state;
+
+  }
+  
+  function changeTab (selectedTab) {
+    this.setState({selectedTab})
+  }
+
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
+
+    return (        
+      <Tabs>
+        <Tab
+        titleStyle={{fontWeight: 'bold', fontSize: 10}}
+        selectedTitleStyle={{marginTop: -1, marginBottom: 6}}
+        selected={selectedTab === 'feed'}
+        title={selectedTab === 'feed' ? 'FEED' : null}
+        renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='whatshot' size={33} />}
+        renderSelectedIcon={() => <Icon color={'#6296f9'} name='whatshot' size={30} />}
+        onPress={() => this.changeTab('feed')}>
+        <Feed />
+        </Tab>
+
+        <Tab
+        titleStyle={{fontWeight: 'bold', fontSize: 10}}
+        selectedTitleStyle={{marginTop: -1, marginBottom: 6}}
+        selected={selectedTab === 'profile'}
+        title={selectedTab === 'profile' ? 'PROFILE' : null}
+        renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='person' size={33} />}
+        renderSelectedIcon={() => <Icon color={'#6296f9'} name='person' size={30} />}
+        onPress={() => this.changeTab('profile')}>
+        <Profile />
+        </Tab>
+
+      </Tabs>
     );
   }
 }
