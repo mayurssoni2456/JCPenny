@@ -1,0 +1,3 @@
+rootProject.name = 'JCPenny'
+
+include ':app'
