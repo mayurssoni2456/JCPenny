@@ -4,72 +4,14 @@
  * @flow
  */
 
+'use strict';
+
 import React, { Component } from 'react';
 
-import { Tabs, Tab, Icon } from 'react-native-elements'
+import BaseComponent from './containers/BaseComponent';
+
 import {
   AppRegistry,
-  StyleSheet,
-  Text,
-  View
 } from 'react-native';
 
-
-export default class JCPenny extends Component {
-
-  
-    constructor(props) {
-    super(props);
-    this.state = {
-      selectedTab: 'profile',
-    };
-  }
-    
-  render() {
-
-    return (        
-      
-      <Tabs>
-        <Tab
-        title={"Departments"}
-        titleStyle={{fontWeight: 'bold', fontSize: 10}}
-        selectedTitleStyle={{marginTop: -1, marginBottom: 6}}                
-        renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='whatshot' size={33} />}
-        renderSelectedIcon={() => <Icon color={'#6296f9'} name='whatshot' size={30} />}
-        onPress={() => this.changeTab('feed')}>      
-        </Tab>
-
-        <Tab
-        title={"Store"}
-        titleStyle={{fontWeight: 'bold', fontSize: 10}}
-        selectedTitleStyle={{marginTop: -1, marginBottom: 6}}                
-        renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='person' size={33} />}
-        renderSelectedIcon={() => <Icon color={'#6296f9'} name='person' size={30} />}
-        onPress={() => this.changeTab('profile')}>
-        </Tab>
-
-      </Tabs>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
-
-AppRegistry.registerComponent('JCPenny', () => JCPenny);
+AppRegistry.registerComponent('JCPenny', () => BaseComponent);
