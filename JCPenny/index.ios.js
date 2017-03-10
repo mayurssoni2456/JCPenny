@@ -5,6 +5,7 @@
  */
 
 import React, { Component } from 'react';
+
 import { Tabs, Tab, Icon } from 'react-native-elements'
 import {
   AppRegistry,
@@ -30,6 +31,7 @@ export default class JCPenny extends Component {
       
       <Tabs>
         <Tab
+        title={"Departments"}
         titleStyle={{fontWeight: 'bold', fontSize: 10}}
         selectedTitleStyle={{marginTop: -1, marginBottom: 6}}                
         renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='whatshot' size={33} />}
@@ -38,18 +40,9 @@ export default class JCPenny extends Component {
         </Tab>
 
         <Tab
+        title={"Store"}
         titleStyle={{fontWeight: 'bold', fontSize: 10}}
         selectedTitleStyle={{marginTop: -1, marginBottom: 6}}                
-        renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='whatshot' size={33} />}
-        renderSelectedIcon={() => <Icon color={'#6296f9'} name='person' size={30} />}
-        onPress={() => this.changeTab('feed')}>
-        </Tab>
-
-        <Tab
-        titleStyle={{fontWeight: 'bold', fontSize: 10}}
-        selectedTitleStyle={{marginTop: -1, marginBottom: 6}}
-        selected={selectedTab === 'profile'}
-        title={selectedTab === 'profile' ? 'PROFILE' : null}
         renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='person' size={33} />}
         renderSelectedIcon={() => <Icon color={'#6296f9'} name='person' size={30} />}
         onPress={() => this.changeTab('profile')}>
