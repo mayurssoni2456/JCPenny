@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Icon } from 'react-native-elements'
 import {View, Text, TouchableOpacity} from 'react-native';
 
-export default class Shop extends Component {
+export default class Stores extends Component {
 
 	constructor(props)
 	{
@@ -13,8 +13,8 @@ export default class Shop extends Component {
 	{
 		console.log("shop loaded")
 		return(
-				<View style={{flex: 1, backgroundColor:'red', justifyContent:'center'}}>
-				<Text >Department </Text>
+				<View style={{flex: 1, backgroundColor:'blue', justifyContent:'center'}}>
+				<Text >Stores </Text>
 				</View>
 			);
 	}
