@@ -16,33 +16,33 @@ import {
 
 export default class JCPenny extends Component {
 
+  
     constructor(props) {
     super(props);
     this.state = {
       selectedTab: 'profile',
     };
-
-    const { selectedTab } = this.state;
-
   }
-  
-  function changeTab (selectedTab) {
-    this.setState({selectedTab})
-  }
-
+    
   render() {
 
     return (        
+      
       <Tabs>
         <Tab
         titleStyle={{fontWeight: 'bold', fontSize: 10}}
-        selectedTitleStyle={{marginTop: -1, marginBottom: 6}}
-        selected={selectedTab === 'feed'}
-        title={selectedTab === 'feed' ? 'FEED' : null}
+        selectedTitleStyle={{marginTop: -1, marginBottom: 6}}                
         renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='whatshot' size={33} />}
         renderSelectedIcon={() => <Icon color={'#6296f9'} name='whatshot' size={30} />}
+        onPress={() => this.changeTab('feed')}>      
+        </Tab>
+
+        <Tab
+        titleStyle={{fontWeight: 'bold', fontSize: 10}}
+        selectedTitleStyle={{marginTop: -1, marginBottom: 6}}                
+        renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='whatshot' size={33} />}
+        renderSelectedIcon={() => <Icon color={'#6296f9'} name='person' size={30} />}
         onPress={() => this.changeTab('feed')}>
-        <Feed />
         </Tab>
 
         <Tab
@@ -53,7 +53,6 @@ export default class JCPenny extends Component {
         renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='person' size={33} />}
         renderSelectedIcon={() => <Icon color={'#6296f9'} name='person' size={30} />}
         onPress={() => this.changeTab('profile')}>
-        <Profile />
         </Tab>
 
       </Tabs>
