@@ -6,12 +6,8 @@
 
 'use strict';
 
-import React, { Component } from 'react';
+import { AppRegistry } from 'react-native';
+import setup from './app/js/setup';
 
-import BaseComponent from './containers/BaseComponent';
+AppRegistry.registerComponent('JCPenny', setup);
 
-import {
-  AppRegistry,
-} from 'react-native';
-
-AppRegistry.registerComponent('JCPenny', () => BaseComponent);
