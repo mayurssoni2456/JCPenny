@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Content, Text, Button, Icon, Left, Right, Body, Grid, ListItem, List, Thumbnail, Spinner } from 'native-base';
-
+import {Image} from 'react-native';
 import styles from './styles';
 import FooterBar from '../footer';
 import HeaderBar from '../header';
@@ -53,6 +53,10 @@ class PDP extends Component {
       .then((responseJson) => {
           // Store the results in the state variable results and set loading to 
           // false to remove the spinner and display the list of categories
+          console.log(responseJson);
+          this.setState({
+            title:responseJson.name
+          });
           that.setState({
               results: responseJson,
               loading: false
@@ -68,6 +72,12 @@ class PDP extends Component {
       });
   }
 
+  componentDidMount(){
+    const { props: { pdpUrl } } = this;
+    this.load(pdpUrl);
+    //this.props.setPDP(undefined);
+  }
+
   //popRoute() {
     //this.props.popRoute(this.props.navigation.key);
   //}
@@ -78,9 +88,9 @@ class PDP extends Component {
   }
 
   render() {
-    const { props: { index, list } } = this;
+    //const { props: { index, list } } = this;
     
-      this.load(index);
+      //this.load(index);
       return(
       
       <Container style={styles.container}>
@@ -88,8 +98,17 @@ class PDP extends Component {
         
         <Content padder>
           <Grid style={styles.mt}>
-          <Text>PDP</Text>
-          
+          { this.state.results.image ? 
+          <Image style={{width: 300, height: 300}} source={{uri:this.state.results.image.url }}/>
+          :
+          <Text></Text>
+          }
+          { this.state.results.images ? 
+          <Image style={{width: 300, height: 300}} source={{uri:this.state.results.images[0].url }}/>
+          :
+          <Text></Text>
+          }
+         
           </Grid>
         </Content>
 
@@ -108,6 +127,7 @@ function bindAction(dispatch) {
 
 const mapStateToProps = state => ({
   navigation: state.cardNavigation,
+  pdpUrl: state.pdp.pdpUrl
 });
 
 

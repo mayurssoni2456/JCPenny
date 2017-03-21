@@ -5,6 +5,7 @@ import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Content, Text, Button, Icon, Left, Right, Body, Grid, ListItem, List, Thumbnail, Spinner } from 'native-base';
 import { View } from 'react-native';
 import { setPLP } from '../../actions/plp';
+import { setPDP } from '../../actions/pdp';
 import styles from './styles';
 import FooterBar from '../footer';
 import HeaderBar from '../header';
@@ -27,6 +28,7 @@ class PLP extends Component {
     }),
     loading: React.PropTypes.bool,
     setPLP: React.PropTypes.func,
+    setPDP: React.PropTypes.func,
   }
 
   constructor(props) {
@@ -135,7 +137,8 @@ class PLP extends Component {
     //this.props.popRoute(this.props.navigation.key);
   //}
 
-  pushRoute(route, index) {
+  pushRoute(route, pdpUrl) {
+    this.props.setPDP(pdpUrl);
     this.props.pushRoute({ key: route, index: 1 }, this.props.navigation.key);
   }
 
@@ -178,6 +181,7 @@ function bindAction(dispatch) {
   return {
     pushRoute: (route, key) => dispatch(pushRoute(route, key)),
     setPLP: plpUrl => dispatch(setPLP(plpUrl)),
+    setPDP: pdpUrl => dispatch(setPDP(pdpUrl)),
   };
 }
 
