@@ -11,6 +11,7 @@ import SplashPage from './components/splashscreen/';
 import Stores from './components/stores';
 import PLP from './components/plp';
 import PDP from './components/pdp';
+import Map from './components/map';
 
 import { statusBarColor } from './themes/base-theme';
 
@@ -65,6 +66,10 @@ class AppNavigator extends Component {
         return <PLP />;
       case 'pdp':
         return <PDP />;
+      case 'pdp':
+        return <PDP />;
+      case 'map':
+        return <Map />;
       default :
         return <Departments />;
     }

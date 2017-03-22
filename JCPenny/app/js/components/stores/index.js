@@ -8,7 +8,7 @@ import { Grid, Row } from 'react-native-easy-grid';
 import styles from './styles';
 import FooterBar from '../footer';
 import HeaderBar from '../header';
-
+import { setMap } from '../../actions/map';
 const {
   //reset,
   pushRoute,
@@ -50,10 +50,6 @@ class Stores extends Component {
     that.load();
   }
 
-  pushRoute(route, index) {
-    this.props.setIndex(index);
-    this.props.pushRoute({ key: route, index: 1 }, this.props.navigation.key);
-  }
 
   load() {
     var that = this;
@@ -85,18 +81,22 @@ class Stores extends Component {
       });
   }
 
+   pushRoute(route, index) {
+    this.props.setMap();
+    this.props.pushRoute({ key: route, index: 1 }, this.props.navigation.key);
+  }
+
   render() {
     console.log(this.state.results);
 
     let counter = 0;
     return (
+      
       <Container style={styles.container}>
       <HeaderBar title="Find Store" headerIconDetails={this.state.headerIconDetails} />  
-
-        <TouchableHighlight style={{flexDirection:'row', flex:0.1, onPress={this.onMapClick}}}>
-
-          <View style={{flexDirection:'row', padding:15,flex:0.1, borderBottomWidth:1,borderBottomColor:'lightgrey'}}>                    
-          
+        
+        <TouchableHighlight style={{flexDirection:'row', flex:0.1}} onPress={() => this.pushRoute('map',0)}>
+          <View style={{flexDirection:'row', padding:15,flex:0.1, borderBottomWidth:1,borderBottomColor:'lightgrey'}}>                              
             <View>
               <Icon active name='ios-navigate-outline' style={{color:'red', width:50, height:30,alignSelf:'center'}}/>            
             </View>   
@@ -110,10 +110,8 @@ class Stores extends Component {
               <Icon active name='map'/>
               <Text style={{color:'red', paddingLeft:10,fontSize:12}}>Map</Text>            
             </View>  
-
           </View>
-        </TouchableHighlight>
-      
+        </TouchableHighlight>              
 
       <Content>                      
       <ListItem itemHeader first>
@@ -147,10 +145,10 @@ class Stores extends Component {
 function bindAction(dispatch) {
   return {
     pushRoute: (route, key) => dispatch(pushRoute(route, key)),
-    popRoute: key => dispatch(popRoute(key))
+    popRoute: key => dispatch(popRoute(key)),
+    setMap:() => dispatch(setMap())
   };
 }
-
 const mapStateToProps = state => ({
   navigation: state.cardNavigation,
 });
