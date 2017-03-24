@@ -17,36 +17,35 @@ const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
-const LATITUDE_DELTA = 0.0922;
+// const LATITUDE_DELTA = 0.0922;
+const LATITUDE_DELTA = 1;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 class StaticMap extends React.Component {
   constructor(props) {
     super(props);
-
+    console.log(this.props.stores);
     this.state = {
       title: 'Map',
       region: {
-        latitude: LATITUDE,
-        longitude: LONGITUDE,
+        latitude: this.props.stores[0].latitude,
+        longitude: this.props.stores[0].longitude,        
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
-      headerIconDetails: {
-        leftHeaderIcon:'ios-arrow-back',
-        leftHeaderIconAction: 'popRoute',            
-      }
+      stores:[],
     };
   }
 
   render() {
     return (
+
+
       <Container style={styles.container}>
-        <HeaderBar title={this.state.title} headerIconDetails={this.state.headerIconDetails} /> 
-          <Content>            
-              <ScrollView                                
-              >         
-                <MapView 
+          <Content>
+              <ScrollView
+              >
+                <MapView
                   provider={this.props.provider}
                   style={styleMap.map}
                   scrollEnabled={false}
@@ -54,10 +53,26 @@ class StaticMap extends React.Component {
                   pitchEnabled={false}
                   rotateEnabled={false}
                   initialRegion={this.state.region}
-                >          
-                </MapView>         
-              </ScrollView>            
-        </Content>
+                  >
+                  </MapView>
+
+                  { this.props.stores.map(marker => (
+
+                  // var latlong1 = {
+                  //   latitude: marker.latitude,
+                  //   longitude: marker.longitude,
+                  // };
+
+                    <MapView.Marker
+                      coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
+                      title={marker.name}
+                      key={marker.id}
+                      description={marker.street}
+                    />
+                  ))}
+
+                </ScrollView>
+              </Content>
       </Container>
     );
   }
@@ -65,10 +80,12 @@ class StaticMap extends React.Component {
 
 StaticMap.propTypes = {
   provider: MapView.ProviderPropType,
+  stores: React.PropTypes.arrayOf(React.PropTypes.string),
 };
 
 const styleMap = StyleSheet.create({
   container: {
+    flex:1,
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -78,8 +95,8 @@ const styleMap = StyleSheet.create({
     paddingVertical: 40,
   },
   map: {
-    width: 250,
-    height: 250,
+    width: 400,
+    height: 400,
   },
 });
 

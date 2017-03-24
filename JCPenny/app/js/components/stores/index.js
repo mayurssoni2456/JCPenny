@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View, ScrollView, ListView, TouchableHighlight} from 'react-native';
+import { TouchableOpacity, View, ScrollView, ListView, TouchableHighlight, TextInput} from 'react-native';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Title, Content, Text, Button, Icon, Left, Body, Right, Spinner, Thumbnail, List, ListItem} from 'native-base';
@@ -8,7 +8,11 @@ import { Grid, Row } from 'react-native-easy-grid';
 import styles from './styles';
 import FooterBar from '../footer';
 import HeaderBar from '../header';
+import NearByListView from './NearByListView';
+import StaticMap from '../map';
+
 import { setMap } from '../../actions/map';
+
 const {
   //reset,
   pushRoute,
@@ -17,7 +21,9 @@ const {
 class Stores extends Component {
 
   static propTypes = {
+    zipcode: React.PropTypes.string,
     loading: React.PropTypes.bool,
+    isMapEnabled: React.PropTypes.bool,
     pushRoute: React.PropTypes.func,
     results: React.PropTypes.arrayOf(React.PropTypes.string),
     navigation: React.PropTypes.shape({
@@ -36,33 +42,36 @@ class Stores extends Component {
     this.state = {
       results: [],
       title: 'Stores',
+      zipcode: '80202',
+      isMapEnabled: false,
       headerIconDetails: {
         rightHeaderIcon: 'search',
-        rightHeaderIconAction: 'search'  
+        rightHeaderIconAction: 'search'
       },
-      
-      dataSource: ds.cloneWithRows([{name:'Loading', image: {url:'https://m.jcpenney.com/v4/stores/zipcode=80202'}}])
+
+      dataSource: ds.cloneWithRows([])
+      //[{name:'Loading', image: {url:'https://m.jcpenney.com/v4/stores/zipcode=80202'}}]
     }
   }
 
   componentDidMount() {
-    var that = this;
-    that.load();
+    this.load();
   }
-
 
   load() {
     var that = this;
     // Set loading to true when the search starts to display a Spinner
-    that.setState({
+    this.setState({
       loading: true
     });
 
-    
-    return fetch('https://m.jcpenney.com/v4/stores/zipcode=80202')
+    var urlString = 'https://m.jcpenney.com/v4/stores/zipcode='+this.state.zipcode;
+    console.log(urlString);
+
+    return fetch(urlString)
       .then((response) => response.json())
       .then((responseJson) => {
-          // Store the results in the state variable results and set loading to 
+          // Store the results in the state variable results and set loading to
           // false to remove the spinner and display the list of categories
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
            that.setState({
@@ -86,57 +95,70 @@ class Stores extends Component {
     this.props.pushRoute({ key: route, index: 1 }, this.props.navigation.key);
   }
 
+  onChange(text)
+  {
+    this.setState({
+      zipcode: text
+    });
+  }
+
+  onSubmit()
+  {
+    this.load();
+    this.forceUpdate();
+  }
+  onMapClick()
+  {
+    this.setState({
+        isMapEnabled: !this.state.isMapEnabled
+    });
+      this.forceUpdate();
+  }
   render() {
     console.log(this.state.results);
 
     let counter = 0;
     return (
-      
-      <Container style={styles.container}>
-      <HeaderBar title="Find Store" headerIconDetails={this.state.headerIconDetails} />  
-        
-        <TouchableHighlight style={{flexDirection:'row', flex:0.1}} onPress={() => this.pushRoute('map',0)}>
-          <View style={{flexDirection:'row', padding:15,flex:0.1, borderBottomWidth:1,borderBottomColor:'lightgrey'}}>                              
-            <View>
-              <Icon active name='ios-navigate-outline' style={{color:'red', width:50, height:30,alignSelf:'center'}}/>            
-            </View>   
 
-           <View style={{flexDirection:'column', flex:0.8}}>
-              <Text style={{fontSize:13, fontWeight:'600'}}>823030</Text>
-              <Text style={{height:15, fontSize:12}}>Tap to change location </Text>
+      <Container style={styles.container}>
+      <HeaderBar title="Find Store" headerIconDetails={this.state.headerIconDetails} />
+      {/*  Search Header */}
+        <View style={{flexDirection:'row', padding:10,flex:0.05, borderBottomWidth:1,borderBottomColor:'lightgrey'}}>
+
+
+            <View>
+              <Icon active name='ios-navigate-outline' style={{color:'red', width:30, height:30,alignSelf:'center'}}/>
+            </View>
+
+           <View style={styles.inputView}>
+             <TextInput keyboardType = 'default' style={styles.input} onChangeText={this.onChange.bind(this)} onSubmitEditing={this.onSubmit.bind(this)}>
+             </TextInput>
            </View>
 
-           <View style={{flexDirection:'row', alignItems: 'center'}}>
-              <Icon active name='map'/>
-              <Text style={{color:'red', paddingLeft:10,fontSize:12}}>Map</Text>            
-            </View>  
-          </View>
-        </TouchableHighlight>              
+           <TouchableHighlight onPress={this.onMapClick.bind(this)}>
+                {
+                   this.state.isMapEnabled ?
+                   <View style={styles.mapIconView}>
+                    <Icon active name='ios-list' style={{color:'red'}} />
+                    <Text style={{color:'red', paddingLeft:10,fontSize:12}}>List</Text>
+                  </View>
+                  :
+                    <View style={styles.mapIconView}>
+                      <Icon active name='ios-pin-outline' style={{color:'red'}}/>
+                      <Text style={{color:'red', paddingLeft:10,fontSize:12}}>Map</Text>
+                    </View>
+               }
 
-      <Content>                      
-      <ListItem itemHeader first>
-        <Text style={{fontSize:12, color:'grey'}}>Nearby Stores</Text>
-      </ListItem>        
-      {this.state.loading ? 
-        <Spinner /> :                                                     
-        <List dataArray={this.state.results} renderRow={(item) =>                                    
-          <ListItem button onPress={() => this.pushRoute('pdp', item.url)}>                  
-          <View style={{flexDirection:'column', flex:1}}>
+          </TouchableHighlight>
+        </View>
+        <Content>
+        {this.state.isMapEnabled ?
+          <StaticMap stores={this.state.results}/> : <NearByListView results={this.state.results}/>
+        }
 
-          <View style={{flexDirection:'row', justifyContent:'flex-start'}}>
-          <Text style={{fontWeight: 'bold', color: '#696969', fontSize: 14}}>{item.name}</Text>
-          <Text style={{ color: '#696969', fontSize: 14,paddingLeft: 10}}>{item.distance} mi</Text>                      
-          </View>                    
-          <View style={{flexDirection:'row', paddingTop:5}} >
-          <Text style={{color: '#696969', fontSize: 14,flexDirection:'row'}}>{item.street}</Text>                      
-          </View>
-          </View>                      
-          </ListItem>
-        } />
-      }
-      </Content>
+        </Content>
 
-      <FooterBar />
+      {/* <FooterBar /> */}
       </Container>
       );
   }
