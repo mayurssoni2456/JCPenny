@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, View, ScrollView, ListView, TouchableHighlight, TextInput} from 'react-native';
-import { connect } from 'react-redux';
-import { actions } from 'react-native-navigation-redux-helpers';
+//import { connect } from 'react-redux';
+//import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Title, Content, Text, Button, Icon, Left, Body, Right, Spinner, Thumbnail, List, ListItem} from 'native-base';
 import { Grid, Row } from 'react-native-easy-grid';
-
+import {Actions} from "react-native-router-flux";
 
 
 class NearByListView extends Component {
 
   static propTypes = {
-    results: React.PropTypes.arrayOf(React.PropTypes.string),
+    
   }
 
   constructor(props)
@@ -19,13 +19,18 @@ class NearByListView extends Component {
 
   }
 
+  renderBarcodeScanView() {
+    Actions.barcodeScanner();
+  }
+
   render() {
 
     return(
       <Container>
         <Content>
           <ListItem itemHeader first>
-            <Text style={{fontSize:12, color:'grey'}}>Nearby Stores</Text>
+            <Text style={{fontSize:14, color:'grey'}}>Nearby Stores</Text>
+            <Button onPress={() => this.renderBarcodeScanView()} info><Text>Scan Barcode</Text></Button>
           </ListItem>
           <List dataArray={this.props.results} renderRow={(item) =>
             <ListItem button onPress={() => this.pushRoute('pdp', item.url)}>

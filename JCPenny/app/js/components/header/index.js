@@ -5,19 +5,19 @@ import { connect } from 'react-redux';
 import { Content, Text, List, ListItem, Header, Left, Body, Right, Button, Icon, Title, InputGroup, Input, Item } from 'native-base';
 
 //import { setIndex } from '../../actions/list';
-import { actions } from 'react-native-navigation-redux-helpers';
-import { setPLP } from '../../actions/plp';
+//import { actions } from 'react-native-navigation-redux-helpers';
+//import { setPLP } from '../../actions/plp';
 //import navigateTo from '../../actions/sideBarNav';
 import myTheme from '../../themes/base-theme';
 
 import styles from './style';
 import SearchBar from './../searchBar'
 
-const {
-  reset,
-  pushRoute,
-  popRoute
-} = actions;
+// const {
+//   reset,
+//   pushRoute,
+//   popRoute
+// } = actions;
 
 class HeaderBar extends Component {
 
@@ -33,9 +33,9 @@ class HeaderBar extends Component {
     popRoute: React.PropTypes.func
   }*/
   static propTypes = {
-    navigation: React.PropTypes.shape({
-      key: React.PropTypes.string,
-    }),
+    // navigation: React.PropTypes.shape({
+    //   key: React.PropTypes.string,
+    // }),
     pushRoute: React.PropTypes.func,
     title: React.PropTypes.string,
     navigateTo: React.PropTypes.func,
@@ -122,16 +122,16 @@ class HeaderBar extends Component {
   }
 }
 
-function bindAction(dispatch) {
-  return {
-    popRoute: key => dispatch(popRoute(key)),
-    pushRoute: (route, key) => dispatch(pushRoute(route, key)),
-    setPLP: plpUrl => dispatch(setPLP(plpUrl))
-  };
-}
+// function bindAction(dispatch) {
+//   return {
+//     popRoute: key => dispatch(popRoute(key)),
+//     pushRoute: (route, key) => dispatch(pushRoute(route, key)),
+//     setPLP: plpUrl => dispatch(setPLP(plpUrl))
+//   };
+// }
 
-const mapStateToProps = state => ({
-  navigation: state.cardNavigation,
-});
+// const mapStateToProps = state => ({
+//   navigation: state.cardNavigation,
+// });
 
-export default connect(mapStateToProps, bindAction)(HeaderBar);
+// export default connect(mapStateToProps, bindAction)(HeaderBar);

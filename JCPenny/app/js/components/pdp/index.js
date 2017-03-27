@@ -3,39 +3,25 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Content, Text, Button, Icon, Left, Right, Body, Grid, ListItem, List, Thumbnail, Spinner } from 'native-base';
-import {Image} from 'react-native';
+import {Image, View, ScrollView} from 'react-native';
 import styles from './styles';
-import FooterBar from '../footer';
-import HeaderBar from '../header';
-
+import Footer from '../footer';
 const {
   popRoute,
   pushRoute
 } = actions;
 
-class PDP extends Component {
+export default class PDP extends Component {
 
   static propTypes = {
-    navigation: React.PropTypes.shape({
-      key: React.PropTypes.string,
-    }),
     pushRoute: React.PropTypes.func,
     title: React.PropTypes.string,
-    headerIconDetails: React.PropTypes.shape({
-      key: React.PropTypes.string
-    })
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      title: 'PDP',
-      headerIconDetails: {
-        leftHeaderIcon:'ios-arrow-back',
-        leftHeaderIconAction: 'popRoute',
-        rightHeaderIcon: 'search',
-        rightHeaderIconAction: 'search'  
-      },
+      loading: 'true',
       results: []
     }
   }
@@ -57,6 +43,7 @@ class PDP extends Component {
           this.setState({
             title:responseJson.name
           });
+          
           that.setState({
               results: responseJson,
               loading: false
@@ -73,62 +60,40 @@ class PDP extends Component {
   }
 
   componentDidMount(){
-    const { props: { pdpUrl } } = this;
+    //const { props: { pdpUrl } } = this;
+    const pdpUrl = this.props.pdpUrl || 'No Title';
     this.load(pdpUrl);
     //this.props.setPDP(undefined);
   }
 
-  //popRoute() {
-    //this.props.popRoute(this.props.navigation.key);
-  //}
-
-  pushRoute(route, index) {
-    this.props.setIndex(index);
-    this.props.pushRoute({ key: route, index: 1 }, this.props.navigation.key);
-  }
-
   render() {
-    //const { props: { index, list } } = this;
-    
-      //this.load(index);
       return(
-      
-      <Container style={styles.container}>
-        <HeaderBar title={this.state.title} headerIconDetails={this.state.headerIconDetails} />
+    
+      <View {...this.props}  style={styles.container}>
         
-        <Content padder>
-          <Grid style={styles.mt}>
+        <ScrollView>
+        {
+          this.state.loading ? <Spinner/> : 
+          <View>
           { this.state.results.image ? 
           <Image style={{width: 300, height: 300}} source={{uri:this.state.results.image.url }}/>
           :
-          <Text></Text>
+          null
           }
           { this.state.results.images ? 
           <Image style={{width: 300, height: 300}} source={{uri:this.state.results.images[0].url }}/>
           :
-          <Text></Text>
-          }
-         
-          </Grid>
-        </Content>
+          null
+          } 
+          </View>
+        }      
+        
+        </ScrollView>
 
-        <FooterBar />
-      </Container>
+        <Footer />
+      </View>
 
       );
   }
 }
 
-function bindAction(dispatch) {
-  return {
-    pushRoute: (route, key) => dispatch(pushRoute(route, key)),
-  };
-}
-
-const mapStateToProps = state => ({
-  navigation: state.cardNavigation,
-  pdpUrl: state.pdp.pdpUrl
-});
-
-
-export default connect(mapStateToProps, bindAction)(PDP);

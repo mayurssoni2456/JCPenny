@@ -1,38 +1,40 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, View, ScrollView, ListView, TouchableHighlight, TextInput} from 'react-native';
-import { connect } from 'react-redux';
-import { actions } from 'react-native-navigation-redux-helpers';
+//import { connect } from 'react-redux';
+//import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Title, Content, Text, Button, Icon, Left, Body, Right, Spinner, Thumbnail, List, ListItem} from 'native-base';
 import { Grid, Row } from 'react-native-easy-grid';
 
 import styles from './styles';
-import FooterBar from '../footer';
-import HeaderBar from '../header';
+//import FooterBar from '../footer';
+//import HeaderBar from '../header';
 import NearByListView from './NearByListView';
 import StaticMap from '../map';
+import Footer from '../footer';
+//import BarcodeScanner from '../barcodeScanner';
 
-import { setMap } from '../../actions/map';
+//import { setMap } from '../../actions/map';
 
-const {
+//const {
   //reset,
-  pushRoute,
-} = actions;
+  //pushRoute,
+//} = actions;
 
-class Stores extends Component {
+export default class Stores extends Component {
 
   static propTypes = {
     zipcode: React.PropTypes.string,
     loading: React.PropTypes.bool,
     isMapEnabled: React.PropTypes.bool,
-    pushRoute: React.PropTypes.func,
+    //pushRoute: React.PropTypes.func,
     results: React.PropTypes.arrayOf(React.PropTypes.string),
-    navigation: React.PropTypes.shape({
-      key: React.PropTypes.string,
-    }),
+    // navigation: React.PropTypes.shape({
+    //   key: React.PropTypes.string,
+    // }),
     title: React.PropTypes.string,
-    headerIconDetails: React.PropTypes.shape({
-      key: React.PropTypes.string
-    })
+    // headerIconDetails: React.PropTypes.shape({
+    //   key: React.PropTypes.string
+    // })
   }
 
   constructor(props) {
@@ -44,10 +46,10 @@ class Stores extends Component {
       title: 'Stores',
       zipcode: '80202',
       isMapEnabled: false,
-      headerIconDetails: {
-        rightHeaderIcon: 'search',
-        rightHeaderIconAction: 'search'
-      },
+      // headerIconDetails: {
+      //   rightHeaderIcon: 'search',
+      //   rightHeaderIconAction: 'search'
+      // },
 
       dataSource: ds.cloneWithRows([])
       //[{name:'Loading', image: {url:'https://m.jcpenney.com/v4/stores/zipcode=80202'}}]
@@ -90,10 +92,10 @@ class Stores extends Component {
       });
   }
 
-   pushRoute(route, index) {
-    this.props.setMap();
-    this.props.pushRoute({ key: route, index: 1 }, this.props.navigation.key);
-  }
+  //pushRoute(route, index) {
+    //this.props.setMap();
+    //this.props.pushRoute({ key: route, index: 1 }, this.props.navigation.key);
+  //}
 
   onChange(text)
   {
@@ -119,60 +121,58 @@ class Stores extends Component {
 
     let counter = 0;
     return (
-
-      <Container style={styles.container}>
-      <HeaderBar title="Find Store" headerIconDetails={this.state.headerIconDetails} />
-      {/*  Search Header */}
-        <View style={{flexDirection:'row', padding:10,flex:0.05, borderBottomWidth:1,borderBottomColor:'lightgrey'}}>
+      <View style={styles.container}>
+        <ScrollView>
+          <View style={{flexDirection:'row', padding:10,flex:0.05, borderBottomWidth:1,borderBottomColor:'lightgrey'}}>
 
 
-            <View>
-              <Icon active name='ios-navigate-outline' style={{color:'red', width:30, height:30,alignSelf:'center'}}/>
-            </View>
+              <View>
+                <Icon active name='ios-navigate-outline' style={{color:'red', width:30, height:30,alignSelf:'center'}}/>
+              </View>
 
-           <View style={styles.inputView}>
-             <TextInput keyboardType = 'default' style={styles.input} onChangeText={this.onChange.bind(this)} onSubmitEditing={this.onSubmit.bind(this)}>
-             </TextInput>
-           </View>
+             <View style={styles.inputView}>
+               <TextInput keyboardType = 'default' style={styles.input} onChangeText={this.onChange.bind(this)} onSubmitEditing={this.onSubmit.bind(this)}>
+               </TextInput>
+             </View>
 
-           <TouchableHighlight onPress={this.onMapClick.bind(this)}>
-                {
-                   this.state.isMapEnabled ?
-                   <View style={styles.mapIconView}>
-                    <Icon active name='ios-list' style={{color:'red'}} />
-                    <Text style={{color:'red', paddingLeft:10,fontSize:12}}>List</Text>
-                  </View>
-                  :
-                    <View style={styles.mapIconView}>
-                      <Icon active name='ios-pin-outline' style={{color:'red'}}/>
-                      <Text style={{color:'red', paddingLeft:10,fontSize:12}}>Map</Text>
+             <TouchableHighlight onPress={this.onMapClick.bind(this)}>
+                  {
+                     this.state.isMapEnabled ?
+                     <View style={styles.mapIconView}>
+                      <Icon active name='ios-list' style={{color:'red'}} />
+                      <Text style={{color:'red', paddingLeft:10,fontSize:12}}>List</Text>
                     </View>
-               }
+                    :
+                      <View style={styles.mapIconView}>
+                        <Icon active name='ios-pin-outline' style={{color:'red'}}/>
+                        <Text style={{color:'red', paddingLeft:10,fontSize:12}}>Map</Text>
+                      </View>
+                 }
 
-          </TouchableHighlight>
-        </View>
-        <Content>
-        {this.state.isMapEnabled ?
-          <StaticMap stores={this.state.results}/> : <NearByListView results={this.state.results}/>
-        }
+            </TouchableHighlight>
+          </View>
+          <Content>
+          {this.state.isMapEnabled ?
+            <StaticMap stores={this.state.results}/> : <NearByListView results={this.state.results}/>
+          }
 
-        </Content>
-
-      {/* <FooterBar /> */}
-      </Container>
+          </Content>
+        </ScrollView>
+        <Footer />
+      </View>
       );
   }
 }
 
-function bindAction(dispatch) {
-  return {
-    pushRoute: (route, key) => dispatch(pushRoute(route, key)),
-    popRoute: key => dispatch(popRoute(key)),
-    setMap:() => dispatch(setMap())
-  };
-}
-const mapStateToProps = state => ({
-  navigation: state.cardNavigation,
-});
+// function bindAction(dispatch) {
+//   return {
+//     pushRoute: (route, key) => dispatch(pushRoute(route, key)),
+//     popRoute: key => dispatch(popRoute(key)),
+//     setMap:() => dispatch(setMap())
+//   };
+// }
+// const mapStateToProps = state => ({
+//   navigation: state.cardNavigation,
+// });
 
-export default connect(mapStateToProps, bindAction)(Stores);
+//export default connect(mapStateToProps, bindAction)(Stores);

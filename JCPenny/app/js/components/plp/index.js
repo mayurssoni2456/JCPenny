@@ -1,48 +1,56 @@
 
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { actions } from 'react-native-navigation-redux-helpers';
+
+
 import { Container, Content, Text, Button, Icon, Left, Right, Body, Grid, ListItem, List, Thumbnail, Spinner } from 'native-base';
-import { View } from 'react-native';
-import { setPLP } from '../../actions/plp';
-import { setPDP } from '../../actions/pdp';
-import styles from './styles';
-import FooterBar from '../footer';
-import HeaderBar from '../header';
+import {StyleSheet, TouchableOpacity, View, ScrollView, TouchableHighlight, ListView} from 'react-native';
 
-const {
-  popRoute,
-  pushRoute
-} = actions;
+//import styles from './styles';
+import Footer from '../footer';
+import {Actions} from "react-native-router-flux";
 
-class PLP extends Component {
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#FFFFFF',
+    flex: 1
+  },
+  text: {
+    fontSize: 20,
+    marginBottom: 15,
+    alignItems: 'center',
+  },
+  mt: {
+    marginTop: 18,
+  },
+  viewRow: {
+    flex:1,
+      flexDirection: 'row',
+      padding: 5,
+      margin: 10,
+      borderBottomWidth: 1,
+      borderColor: '#CCC'
+  },
+
+});
+
+export default class PLP extends Component {
 
   static propTypes = {
-    navigation: React.PropTypes.shape({
-      key: React.PropTypes.string,
-    }),
     pushRoute: React.PropTypes.func,
     title: React.PropTypes.string,
     headerIconDetails: React.PropTypes.shape({
       key: React.PropTypes.string
     }),
-    loading: React.PropTypes.bool,
-    setPLP: React.PropTypes.func,
-    setPDP: React.PropTypes.func,
+    loading: React.PropTypes.bool
   }
 
   constructor(props) {
     super(props);
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      title: 'PLP',
-      headerIconDetails: {
-        leftHeaderIcon:'ios-arrow-back',
-        leftHeaderIconAction: 'popRoute',
-        rightHeaderIcon: 'search',
-        rightHeaderIconAction: 'search'  
-      },
       results: [],
-      loading: true
+      loading: true,
+      dataSource: ds.cloneWithRows([{name:'Loading', image: {url:'https://m.jcpenney.com/v4/categories/root'}}])
     }
   }
 
@@ -60,21 +68,24 @@ class PLP extends Component {
           // Store the results in the state variable results and set loading to 
           // false to remove the spinner and display the list of categories
           console.log(responseJson);
-          this.setState({
-            title:responseJson.name || responseJson.query.split('+').join(' ')
-          });
+          // this.setState({
+          //   title:responseJson.name || responseJson.query.split('+').join(' ')
+          // });
+          let results = [];
           if(responseJson.products){
             if(!responseJson.products.data){
-              that.setState({
-                  results: responseJson.products,
-                  loading: false
-              });
+              results = responseJson.products;
+              // that.setState({
+              //     results: responseJson.products,
+              //     loading: false
+              // });
             }
             else {
-              that.setState({
-                  results: responseJson.products.data,
-                  loading: false
-              });
+              results = responseJson.products.data;
+              // that.setState({
+              //     results: responseJson.products.data,
+              //     loading: false
+              // });
             }
           }
           
@@ -86,16 +97,18 @@ class PLP extends Component {
                 // false to remove the spinner and display the list of categories
                 if(responseJson.products){
                   if(!responseJson.products.data){
-                    that.setState({
-                        results: responseJson.products,
-                        loading: false
-                    });
+                    results = responseJson.products;
+                    // that.setState({
+                    //     results: responseJson.products,
+                    //     loading: false
+                    // });
                   }
                   else {
-                    that.setState({
-                        results: responseJson.products.data,
-                        loading: false
-                    });
+                    results = responseJson.products.data;
+                    // that.setState({
+                    //     results: responseJson.products.data,
+                    //     loading: false
+                    // });
                   }
                   
                 }
@@ -112,6 +125,13 @@ class PLP extends Component {
             });
             
           }
+
+          const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+          that.setState({
+              results: results,
+              loading: false,
+              dataSource:ds.cloneWithRows(results)
+          });
       })
       .catch((error) => {
 
@@ -125,70 +145,53 @@ class PLP extends Component {
 
   componentDidMount() {
 
-    const { props: { plpUrl } } = this;
+    //const { props: { plpUrl } } = this;
+    const plpUrl = this.props.plpUrl || {};
     this.load(plpUrl);
-    this.props.setPLP(undefined);
+    //this.props.setPLP(undefined);
     /*this.setState({
       title:'Red Dress'
     });*/
   }
 
-  //popRoute() {
-    //this.props.popRoute(this.props.navigation.key);
-  //}
-
-  pushRoute(route, pdpUrl) {
-    this.props.setPDP(pdpUrl);
-    this.props.pushRoute({ key: route, index: 1 }, this.props.navigation.key);
+  pushRoute(name,pdpUrl) {
+    Actions.pdp({pdpUrl:pdpUrl, title:name})
   }
 
   render() {
-    
-    
-      //this.load(plpUrl);
-      console.log(this.state.results);
       return(
-      
-      <Container style={styles.container}>
-        <HeaderBar title={this.state.title} headerIconDetails={this.state.headerIconDetails} />
-        
-          <Content padder>
-            <Grid style={styles.mt}>
-              {this.state.loading ? 
-                <Spinner /> : 
-              <List dataArray={this.state.results} renderRow={(item) =>
-                  <ListItem button onPress={() => this.pushRoute('pdp', item.url)}>
-                      <Thumbnail square size={80} source={{uri: 'https://s7d9.scene7.com/is/image/JCPenney/DP1129201621250175S.jpg'}} />
-                      <Text style={{fontWeight: '200', color: '#696969', fontSize: 14, flex:1}}>{item.name}</Text>
-                      <View>
-                        <Text style={{fontWeight: '200', color: '#696969', fontSize: 14, flex:1}}>{item.prices[0].max} sale</Text>
-                        <Text style={{fontWeight: '200', color: '#696969', fontSize: 14, flex:1}}>{item.prices[1].max} original</Text>
-                      </View>
-                  </ListItem>
-              } />
+        <View {...this.props}  style={styles.container}>
+          <ScrollView>
+          
+            <ListView
+              initialListSize={24}
+              dataSource = {this.state.dataSource}
+              renderRow = {
+                 (rowData, sectionId, rowID) => (
+                   
+                <TouchableHighlight onPress={() =>  this.pushRoute(rowData.name, rowData.url)} underlayColor='rgba(0,0,0,0)' style={styles.viewRow}>
+                  <View style={{ flex:1,flexDirection: 'row', alignItems: 'center'}}>
+                    <Thumbnail square size={80} source={require('../../../images/no-image-icon-15.png')} />
+                    <Text style={{fontWeight: '200', color: '#696969', fontSize: 14, flex:1}}>{rowData.name}</Text>
+                    {rowData.prices ? 
+                    <View >
+                      <Text style={{fontWeight: '200', color: '#696969', fontSize: 14, flex:1}}>{rowData.prices[0].max} sale</Text>
+                      <Text style={{fontWeight: '200', color: '#696969', fontSize: 14, flex:1}}>{rowData.prices[1].max} original</Text>
+                    </View>
+                    :
+                    null
+                    }
+                  </View>
+                </TouchableHighlight>
+                 )
               }
-            </Grid>
-          </Content>
+            />
 
-        <FooterBar />
-      </Container>
-
-        );
+            
+          
+          </ScrollView>
+          <Footer/>
+        </View>
+      );
   }
 }
-
-function bindAction(dispatch) {
-  return {
-    pushRoute: (route, key) => dispatch(pushRoute(route, key)),
-    setPLP: plpUrl => dispatch(setPLP(plpUrl)),
-    setPDP: pdpUrl => dispatch(setPDP(pdpUrl)),
-  };
-}
-
-const mapStateToProps = state => ({
-  navigation: state.cardNavigation,
-  plpUrl: state.plp.plpUrl
-});
-
-
-export default connect(mapStateToProps, bindAction)(PLP);

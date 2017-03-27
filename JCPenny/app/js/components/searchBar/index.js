@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import { Text, Footer, FooterTab, Button, Icon } from 'native-base';
 import { View, TextInput, TouchableOpacity } from 'react-native';
 
-import navigateTo from '../../actions/footerNav';
+//import navigateTo from '../../actions/footerNav';
 import myTheme from '../../themes/base-theme';
 
 import styles from './style';
 
-class SearchBar extends Component {
+export default class SearchBar extends Component {
 
   static propTypes = {
     navigateTo: React.PropTypes.func,
@@ -22,27 +22,16 @@ class SearchBar extends Component {
 
   render() {
     return (
-      <View>
-        <TextInput
-          ref={(ref) => this.textInput = ref}
-         
-          
-        />
-       
+      <View style={{backgroundColor: '#f7f7f7', top:50}}>
+        <InputGroup>                                             
+          <Input placeholder="Search" value={this.state.searchText}  onChangeText={(text) => this.setState({searchText:text})}/>                    
+          <Button transparent onPress={()=>this.pushRoute('plp')}><Text>Go</Text></Button>
+        </InputGroup>                    
+        
       </View>
     );
   }
 }
 
-function bindAction(dispatch) {
-  return {
-    navigateTo: (route, homeRoute) => dispatch(navigateTo(route, homeRoute))
-  };
-}
 
-const mapStateToProps = state => ({
-  //navigation: state.cardNavigation,
-  //searchProducts: state.search.searchProducts
-});
 
-export default connect(mapStateToProps, bindAction)(SearchBar);

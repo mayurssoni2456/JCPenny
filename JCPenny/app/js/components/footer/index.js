@@ -1,21 +1,27 @@
 
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+
 import { Text, Footer, FooterTab, Button, Icon } from 'native-base';
 
-import navigateTo from '../../actions/footerNav';
 import myTheme from '../../themes/base-theme';
+import {Actions, ActionConst} from "react-native-router-flux";
 
-import styles from './style';
 
-class FooterBar extends Component {
+export default class FooterBar extends Component {
 
   static propTypes = {
     navigateTo: React.PropTypes.func,
   }
 
   navigateTo(route) {
-    this.props.navigateTo(route, 'Departments');
+    //this.props.navigateTo(route, 'Departments');
+    if(route === 'Departments') {
+      Actions.departments({ type: ActionConst.RESET });
+    }
+    else {
+      Actions.stores({ type: ActionConst.RESET });
+    }
+    
   }
 
   render() {
@@ -26,7 +32,7 @@ class FooterBar extends Component {
                 <Icon name="home" />
                 <Text>Departments</Text>
             </Button>
-            <Button onPress={() => this.navigateTo('stores')}>
+            <Button onPress={() => this.navigateTo('Stores')}>
                 <Icon name="navigate" />
                 <Text>Stores</Text>
             </Button>
@@ -36,14 +42,4 @@ class FooterBar extends Component {
   }
 }
 
-function bindAction(dispatch) {
-  return {
-    navigateTo: (route, homeRoute) => dispatch(navigateTo(route, homeRoute))
-  };
-}
 
-const mapStateToProps = state => ({
-  //navigation: state.cardNavigation,
-});
-
-export default connect(mapStateToProps, bindAction)(FooterBar);

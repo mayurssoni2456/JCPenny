@@ -38,41 +38,34 @@ class StaticMap extends React.Component {
   }
 
   render() {
+    
     return (
 
 
       <Container style={styles.container}>
           <Content>
-              <ScrollView
-              >
-                <MapView
-                  provider={this.props.provider}
-                  style={styleMap.map}
-                  scrollEnabled={false}
-                  zoomEnabled={false}
-                  pitchEnabled={false}
-                  rotateEnabled={false}
-                  initialRegion={this.state.region}
-                  >
-                  </MapView>
+            <ScrollView>
+              <MapView
+                provider={this.props.provider}
+                style={styleMap.map}
+                scrollEnabled={true}
+                zoomEnabled={true}
+                pitchEnabled={false}
+                rotateEnabled={false}
+                initialRegion={this.state.region}
+                >
+                {this.props.stores.map(marker => (
 
-                  { this.props.stores.map(marker => (
-
-                  // var latlong1 = {
-                  //   latitude: marker.latitude,
-                  //   longitude: marker.longitude,
-                  // };
-
-                    <MapView.Marker
-                      coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
-                      title={marker.name}
-                      key={marker.id}
-                      description={marker.street}
-                    />
-                  ))}
-
-                </ScrollView>
-              </Content>
+                  <MapView.Marker
+                    coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
+                    title={marker.name}
+                    key={marker.id}
+                    description={marker.street}
+                  />
+                ))}
+              </MapView>
+            </ScrollView>
+          </Content>
       </Container>
     );
   }
@@ -80,7 +73,7 @@ class StaticMap extends React.Component {
 
 StaticMap.propTypes = {
   provider: MapView.ProviderPropType,
-  stores: React.PropTypes.arrayOf(React.PropTypes.string),
+  //stores: React.PropTypes.arrayOf(React.PropTypes.string),
 };
 
 const styleMap = StyleSheet.create({
