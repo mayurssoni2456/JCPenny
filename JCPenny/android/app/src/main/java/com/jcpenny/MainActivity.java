@@ -2,6 +2,7 @@ package com.jcpenny;
 
 import com.facebook.react.ReactActivity;
 import android.app.Activity;
+import com.devfd.RNGeocoder.RNGeocoderPackage; // <--- import
 
 public class MainActivity extends ReactActivity {
     public static Activity activity;
