@@ -30,25 +30,25 @@ export default {
   inputView:
   {
     flex:1,
-    height: 26,
-    borderColor: 'red',
+    height: 32,
+    borderBottomColor: 'red',
     borderBottomWidth: 1,
     justifyContent:'flex-start',
     marginRight:10,
     marginLeft:5,
+    // backgroundColor: '#F6F6F6',
   },
   mapIconView:
   {
     flexDirection:'row',
-    alignItems: 'center',    
+    alignItems: 'center',
     // backgroundColor:'blue'
   },
   input:
   {
-    // flex:1,
-    height: 25,
+    height: 38,
     // backgroundColor: '#F6F6F6',
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     // margin:10,
     // borderWidth: 1,
     // borderColor:'#D7D7D7',

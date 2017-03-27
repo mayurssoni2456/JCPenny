@@ -29,7 +29,7 @@ class StaticMap extends React.Component {
       title: 'Map',
       region: {
         latitude: this.props.stores[0].latitude,
-        longitude: this.props.stores[0].longitude,        
+        longitude: this.props.stores[0].longitude,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
@@ -38,7 +38,7 @@ class StaticMap extends React.Component {
   }
 
   render() {
-    
+
     return (
 
 
@@ -56,9 +56,10 @@ class StaticMap extends React.Component {
                 >
                 {this.props.stores.map(marker => (
 
+                  // var title =
                   <MapView.Marker
                     coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
-                    title={marker.name}
+                    title={ marker.name+' ('+ marker.distance+' mi)'}
                     key={marker.id}
                     description={marker.street}
                   />
@@ -88,8 +89,8 @@ const styleMap = StyleSheet.create({
     paddingVertical: 40,
   },
   map: {
-    width: 400,
-    height: 400,
+    width: width,
+    height: height,
   },
 });
 

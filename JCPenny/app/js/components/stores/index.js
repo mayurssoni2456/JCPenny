@@ -11,6 +11,7 @@ import styles from './styles';
 import NearByListView from './NearByListView';
 import StaticMap from '../map';
 import Footer from '../footer';
+import Geocoder from 'react-native-geocoder';
 //import BarcodeScanner from '../barcodeScanner';
 
 //import { setMap } from '../../actions/map';
@@ -28,6 +29,7 @@ export default class Stores extends Component {
     isMapEnabled: React.PropTypes.bool,
     //pushRoute: React.PropTypes.func,
     results: React.PropTypes.arrayOf(React.PropTypes.string),
+
     // navigation: React.PropTypes.shape({
     //   key: React.PropTypes.string,
     // }),
@@ -46,6 +48,11 @@ export default class Stores extends Component {
       title: 'Stores',
       zipcode: '80202',
       isMapEnabled: false,
+      initialPosition: 'unknown',
+      latLong:{
+        lat: 40.7809261,
+        lng: -73.9637594
+      },
       // headerIconDetails: {
       //   rightHeaderIcon: 'search',
       //   rightHeaderIconAction: 'search'
@@ -55,12 +62,60 @@ export default class Stores extends Component {
       //[{name:'Loading', image: {url:'https://m.jcpenney.com/v4/stores/zipcode=80202'}}]
     }
   }
+   watchID = (null: ?number);
 
   componentDidMount() {
-    this.load();
+    this.fetchStores();
+    this.setupGeoLocation();
+
+  }
+  componentWillUnmount()
+  {
+      navigator.geolocation.clearWatch(this.watchID);
   }
 
-  load() {
+  setupGeoLocation()
+  {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        initialPosition = JSON.stringify(position);
+        this.setState({initialPosition});
+        // here it is showing undefined
+        latLong = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }
+        this.setState({latLong});
+        this.getZipCode();
+      },
+      (error) => alert(error.message),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
+    this.watchID = navigator.geolocation.watchPosition((position) => {
+      var lastPosition = JSON.stringify(position);
+      this.setState({lastPosition});
+    });
+
+
+  }
+
+  getZipCode()
+  {
+    Geocoder.geocodePosition(this.state.latLong).then(res => {
+      console.log(res);
+      console.log(res[0].postalCode);
+      this.setState(
+        {
+
+          zipcode: res[0].postalCode
+        }
+      );
+    })
+    .catch(err => console.log(err))
+
+  }
+
+  fetchStores() {
     var that = this;
     // Set loading to true when the search starts to display a Spinner
     this.setState({
@@ -92,11 +147,6 @@ export default class Stores extends Component {
       });
   }
 
-  //pushRoute(route, index) {
-    //this.props.setMap();
-    //this.props.pushRoute({ key: route, index: 1 }, this.props.navigation.key);
-  //}
-
   onChange(text)
   {
     this.setState({
@@ -106,15 +156,17 @@ export default class Stores extends Component {
 
   onSubmit()
   {
-    this.load();
+    this.fetchStores();
     this.forceUpdate();
   }
-  onMapClick()
-  {
+  onToggle() {
     this.setState({
         isMapEnabled: !this.state.isMapEnabled
     });
-      this.forceUpdate();
+  }
+
+  currentLocation() {
+      // this.setupGeoLocation();
   }
   render() {
     console.log(this.state.results);
@@ -123,19 +175,20 @@ export default class Stores extends Component {
     return (
       <View style={styles.container}>
         <ScrollView>
-          <View style={{flexDirection:'row', padding:10,flex:0.05, borderBottomWidth:1,borderBottomColor:'lightgrey'}}>
+          <View style={{flexDirection:'row', padding:10,flex:0.01, borderBottomWidth:1,borderBottomColor:'lightgrey'}}>
 
-
+            <TouchableHighlight onPress={this.currentLocation.bind(this)}>
               <View>
                 <Icon active name='ios-navigate-outline' style={{color:'red', width:30, height:30,alignSelf:'center'}}/>
               </View>
+            </TouchableHighlight>
 
              <View style={styles.inputView}>
-               <TextInput keyboardType = 'default' style={styles.input} onChangeText={this.onChange.bind(this)} onSubmitEditing={this.onSubmit.bind(this)}>
+               <TextInput value={this.state.zipcode} underlineColorAndroid='transparent' keyboardType = 'default' style={styles.input} onChangeText={this.onChange.bind(this)} onSubmitEditing={this.onSubmit.bind(this)}>
                </TextInput>
              </View>
 
-             <TouchableHighlight onPress={this.onMapClick.bind(this)}>
+             <TouchableHighlight onPress={this.onToggle.bind(this)}>
                   {
                      this.state.isMapEnabled ?
                      <View style={styles.mapIconView}>
@@ -144,7 +197,7 @@ export default class Stores extends Component {
                     </View>
                     :
                       <View style={styles.mapIconView}>
-                        <Icon active name='ios-pin-outline' style={{color:'red'}}/>
+                        <Icon active name='ios-pin-outline' style={{color:'red'}} />
                         <Text style={{color:'red', paddingLeft:10,fontSize:12}}>Map</Text>
                       </View>
                  }

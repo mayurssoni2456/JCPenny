@@ -10,7 +10,7 @@ import {Actions} from "react-native-router-flux";
 class NearByListView extends Component {
 
   static propTypes = {
-    
+
   }
 
   constructor(props)
@@ -28,12 +28,14 @@ class NearByListView extends Component {
     return(
       <Container>
         <Content>
-          <ListItem itemHeader first>
+          <ListItem itemHeader first style={{height:40, justifyContent:'space-between', alignItems:'flex-start'}}>
             <Text style={{fontSize:14, color:'grey'}}>Nearby Stores</Text>
-            <Button onPress={() => this.renderBarcodeScanView()} info><Text>Scan Barcode</Text></Button>
+            <Button transparent onPress={() => this.renderBarcodeScanView()} style={{height:20}} iconRight>
+              <Icon name='ios-barcode-outline' />
+            </Button>
           </ListItem>
           <List dataArray={this.props.results} renderRow={(item) =>
-            <ListItem button onPress={() => this.pushRoute('pdp', item.url)}>
+            <ListItem>
               <View style={{flexDirection:'column', flex:1}}>
                 <View style={{flexDirection:'row', justifyContent:'flex-start'}}>
                   <Text style={{fontWeight: 'bold', color: '#696969', fontSize: 14}}>{item.name}</Text>

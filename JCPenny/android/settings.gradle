@@ -8,4 +8,7 @@ project(':react-native-vector-icons').projectDir = new File(rootProject.projectD
 include ':react-native-splashscreen'
 project(':react-native-splashscreen').projectDir = new File(settingsDir, '../node_modules/@remobile/react-native-splashscreen/android')
 
+include ':react-native-geocoder', ':app'
+project(':react-native-geocoder').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-geocoder/android')
+
 include ':app'
