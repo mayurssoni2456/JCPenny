@@ -31,7 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
             new RCTCameraPackage(),
             new MapsPackage(),
             new VectorIconsPackage(),
-            new RCTSplashScreenPackage(MainActivity.activity)
+            new RCTSplashScreenPackage(MainActivity.activity, true)
       );
     }
   };
